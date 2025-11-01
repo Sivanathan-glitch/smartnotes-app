@@ -21,13 +21,14 @@ jobs:
 
     - name: Build and Push API Image
       run: |
-        docker build -t smartnotesacr.azurecr.io/smartnotes-api:v3 ./SmartNotes.Api
-        docker push smartnotesacr.azurecr.io/smartnotes-api:v3
+       docker build -t smartnotesacr.azurecr.io/smartnotes-api:v3 -f ./MyApiProject/Dockerfile ./MyApiProject
+       docker push smartnotesacr.azurecr.io/smartnotes-api:v3
 
     - name: Build and Push Web Image
       run: |
-        docker build -t smartnotesacr.azurecr.io/smartnotes-web:ui ./SmartNotes.Web
-        docker push smartnotesacr.azurecr.io/smartnotes-web:ui
+        docker build -t smartnotesacr.azurecr.io/smartnotes-ui:v2 -f ./MyFrontendProject/Dockerfile ./MyFrontendProject
+        docker push smartnotesacr.azurecr.io/smartnotes-ui:v2
+
 
     - name: Set AKS credentials
       run: az aks get-credentials --resource-group rg-smartnotes --name smartnotes-aks --overwrite-existing

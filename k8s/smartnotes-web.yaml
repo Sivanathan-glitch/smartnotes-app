@@ -1,0 +1,31 @@
+apiVersion: apps/v2
+kind: Deployment
+metadata:
+  name: smartnotes-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smartnotes-ui
+  template:
+    metadata:
+      labels:
+        app: smartnotes-ui
+    spec:
+      containers:
+      - name: smartnotes-ui
+        image: smartnotesacr.azurecr.io/smartnotes-ui:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: smartnotes-web-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: smartnotes-ui
+  ports:
+  - port: 80
+    targetPort: 80

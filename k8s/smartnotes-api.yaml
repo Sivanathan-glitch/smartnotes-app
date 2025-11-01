@@ -1,0 +1,31 @@
+apiVersion: apps/v3
+kind: Deployment
+metadata:
+  name: smartnotes-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smartnotes-api
+  template:
+    metadata:
+      labels:
+        app: smartnotes-api
+    spec:
+      containers:
+      - name: smartnotes-api
+        image: smartnotesacr.azurecr.io/smartnotes-api:v3
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v3
+kind: Service
+metadata:
+  name: smartnotes-api-service
+spec:
+  type: ClusterIP
+  selector:
+    app: smartnotes-api
+  ports:
+  - port: 80
+    targetPort: 8080

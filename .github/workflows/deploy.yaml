@@ -1,0 +1,38 @@
+name: Deploy to AKS
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Login to Azure
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Azure Container Registry Login
+      run: az acr login --name smartnotesacr
+
+    - name: Build and Push API Image
+      run: |
+        docker build -t smartnotesacr.azurecr.io/smartnotes-api:v3 ./SmartNotes.Api
+        docker push smartnotesacr.azurecr.io/smartnotes-api:v3
+
+    - name: Build and Push Web Image
+      run: |
+        docker build -t smartnotesacr.azurecr.io/smartnotes-web:ui ./SmartNotes.Web
+        docker push smartnotesacr.azurecr.io/smartnotes-web:ui
+
+    - name: Set AKS credentials
+      run: az aks get-credentials --resource-group rg-smartnotes --name smartnotes-aks --overwrite-existing
+
+    - name: Deploy YAML to AKS
+      run: |
+        kubectl apply -f k8s/smartnotes-api.yaml
+        kubectl apply -f k8s/smartnotes-web.yaml

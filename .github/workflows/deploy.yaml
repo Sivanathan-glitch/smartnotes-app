@@ -31,7 +31,7 @@ jobs:
 
 
     - name: Set AKS credentials
-      run: az aks get-credentials --resource-group rg-smartnotes --name smartnotes-aks --overwrite-existing
+      run: az aks get-credentials --resource-group readit-app-rg --name smartnotes-aks --overwrite-existing
 
     - name: Deploy YAML to AKS
       run: |
